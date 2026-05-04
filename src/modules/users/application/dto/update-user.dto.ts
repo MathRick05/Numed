@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -36,4 +37,9 @@ export class UpdateUserDto {
   @MaxLength(255)
   @IsOptional()
   senha?: string;
+
+  @ApiProperty({ example: false, required: false })
+  @IsBoolean()
+  @IsOptional()
+  cuidador?: boolean;
 }

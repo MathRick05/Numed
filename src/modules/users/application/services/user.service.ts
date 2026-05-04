@@ -33,6 +33,7 @@ export class UserService {
       email: dto.email.toLowerCase(),
       phone: dto.telefone,
       password: hashedPassword,
+      isCaregiver: dto.cuidador ?? false,
       permissions: [],
     })!;
 
@@ -57,6 +58,8 @@ export class UserService {
       const hashedPassword = await bcrypt.hash(dto.senha, 10);
       user.withPassword(hashedPassword);
     }
+
+    if (dto.cuidador !== undefined) user.withIsCaregiver(dto.cuidador);
 
     await this.userRepository.update(user);
   }

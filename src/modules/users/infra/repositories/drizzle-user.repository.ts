@@ -16,6 +16,7 @@ export class DrizzleUserRepository implements UserRepository {
       email: user.email,
       phone: user.phone,
       password: user.password,
+      isCaregiver: user.isCaregiver,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -29,6 +30,7 @@ export class DrizzleUserRepository implements UserRepository {
         email: user.email,
         phone: user.phone,
         password: user.password,
+        isCaregiver: user.isCaregiver,
         updatedAt: new Date(),
       })
       .where(eq(usersSchema.id, user.id!));

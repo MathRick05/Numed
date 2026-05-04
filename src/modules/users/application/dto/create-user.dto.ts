@@ -1,7 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   Matches,
   MaxLength,
   MinLength,
@@ -33,4 +35,9 @@ export class CreateUserDto {
   @MinLength(6)
   @MaxLength(255)
   senha: string;
+
+  @ApiProperty({ example: false, required: false })
+  @IsBoolean()
+  @IsOptional()
+  cuidador?: boolean;
 }

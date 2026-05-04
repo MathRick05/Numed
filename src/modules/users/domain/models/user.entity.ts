@@ -4,6 +4,7 @@ export class User {
   private _email: string;
   private _phone: string;
   private _password: string;
+  private _isCaregiver: boolean;
   private _permissions: string[];
   private readonly _createdAt?: Date;
   private readonly _updatedAt?: Date;
@@ -32,6 +33,10 @@ export class User {
 
   get password(): string {
     return this._password;
+  }
+
+  get isCaregiver(): boolean {
+    return this._isCaregiver;
   }
 
   get permissions(): string[] {
@@ -66,6 +71,11 @@ export class User {
     return this;
   }
 
+  withIsCaregiver(isCaregiver: boolean) {
+    this._isCaregiver = isCaregiver;
+    return this;
+  }
+
   withPermissions(permissions: string[]) {
     this._permissions = permissions;
     return this;
@@ -77,6 +87,7 @@ export class User {
     email: string;
     phone: string;
     password: string;
+    isCaregiver?: boolean;
     permissions?: string[];
     createdAt?: Date;
     updatedAt?: Date;
@@ -88,6 +99,7 @@ export class User {
     user._email = props.email;
     user._phone = props.phone;
     user._password = props.password;
+    user._isCaregiver = props.isCaregiver ?? false;
     user._permissions = props.permissions ?? [];
 
     return user;

@@ -15,6 +15,9 @@ export class UserResponseDto {
   telefone: string;
 
   @ApiProperty()
+  cuidador: boolean;
+
+  @ApiProperty()
   createdAt: Date | undefined;
 
   @ApiProperty()
@@ -25,6 +28,7 @@ export class UserResponseDto {
     nomeCompleto: string,
     email: string,
     telefone: string,
+    cuidador: boolean,
     createdAt: Date | undefined,
     updatedAt: Date | undefined,
   ) {
@@ -32,6 +36,7 @@ export class UserResponseDto {
     this.nomeCompleto = nomeCompleto;
     this.email = email;
     this.telefone = telefone;
+    this.cuidador = cuidador;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -43,6 +48,7 @@ export class UserResponseDto {
       user.fullName,
       user.email,
       user.phone,
+      user.isCaregiver,
       user.createdAt,
       user.updatedAt,
     );

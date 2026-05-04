@@ -50,6 +50,20 @@
       "when": 1777906227571,
       "tag": "0006_goofy_golden_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777907000000,
+      "tag": "0007_add_users_is_caregiver",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777933734930,
+      "tag": "0008_nifty_ben_urich",
+      "breakpoints": true
     }
   ]
 }
