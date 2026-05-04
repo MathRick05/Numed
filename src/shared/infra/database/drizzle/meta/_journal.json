@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1777862518483,
+      "tag": "0000_zippy_newton_destine",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777862738133,
+      "tag": "0001_green_freak",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777863937000,
+      "tag": "0002_create_medicines",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777864674030,
+      "tag": "0003_closed_beyonder",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777902300000,
+      "tag": "0004_create_appointments",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777904353000,
+      "tag": "0005_create_medicine_consumption",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777906227571,
+      "tag": "0006_goofy_golden_guardian",
+      "breakpoints": true
+    }
+  ]
+}

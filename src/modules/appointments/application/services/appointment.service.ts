@@ -1,0 +1,82 @@
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { AppointmentResponseDto } from "@appointments/application/dto/appointment-response.dto";
+import { CreateAppointmentDto } from "@appointments/application/dto/create-appointment.dto";
+import { UpdateAppointmentDto } from "@appointments/application/dto/update-appointment.dto";
+import { Appointment } from "@appointments/domain/models/appointment.entity";
+import {
+  APPOINTMENT_REPOSITORY,
+  type AppointmentRepository,
+} from "@appointments/domain/repositories/appointment-repository.interface";
+import type { PaginatedResult, PaginationParams } from "@shared/infra/hateoas";
+import { UserService } from "@users/application/services/user.service";
+
+@Injectable()
+export class AppointmentService {
+  constructor(
+    @Inject(APPOINTMENT_REPOSITORY)
+    private readonly appointmentRepository: AppointmentRepository,
+    private readonly userService: UserService,
+  ) {}
+
+  async create(userId: string, dto: CreateAppointmentDto): Promise<void> {
+    const user = await this.userService.findById(userId);
+    if (!user) throw new NotFoundException("User not found");
+
+    const appointment = Appointment.restore({
+      userId,
+      tipoConsulta: dto.tipoConsulta,
+      doutor: dto.doutor,
+      data: dto.data,
+      hora: dto.hora,
+      endereco: dto.endereco,
+      status: dto.status,
+      descricao: dto.descricao ?? "",
+    })!;
+
+    await this.appointmentRepository.create(appointment);
+  }
+
+  async edit(userId: string, id: string, dto: UpdateAppointmentDto): Promise<void> {
+    const appointment = await this.appointmentRepository.findById(userId, id);
+    if (!appointment) throw new NotFoundException("Appointment not found");
+
+    if (dto.tipoConsulta) appointment.withTipoConsulta(dto.tipoConsulta);
+    if (dto.doutor) appointment.withDoutor(dto.doutor);
+    if (dto.data) appointment.withData(dto.data);
+    if (dto.hora) appointment.withHora(dto.hora);
+    if (dto.endereco) appointment.withEndereco(dto.endereco);
+    if (dto.status) appointment.withStatus(dto.status);
+    if (dto.descricao !== undefined) appointment.withDescricao(dto.descricao);
+
+    await this.appointmentRepository.update(appointment);
+  }
+
+  async remove(userId: string, id: string): Promise<void> {
+    await this.appointmentRepository.delete(userId, id);
+  }
+
+  async listByUserId(userId: string): Promise<AppointmentResponseDto[]> {
+    const rows = await this.appointmentRepository.findAllByUserId(userId);
+    return rows.map((a) => AppointmentResponseDto.from(a)!);
+  }
+
+  async listByUserIdPaginated(
+    userId: string,
+    params: PaginationParams,
+  ): Promise<PaginatedResult<AppointmentResponseDto>> {
+    const { rows, total } =
+      await this.appointmentRepository.findAllByUserIdPaginated(userId, params);
+
+    return {
+      data: rows.map((a) => AppointmentResponseDto.from(a)!),
+      total,
+      page: params.page,
+      limit: params.limit,
+    };
+  }
+
+  async findById(userId: string, id: string): Promise<AppointmentResponseDto | null> {
+    const appointment = await this.appointmentRepository.findById(userId, id);
+    return AppointmentResponseDto.from(appointment);
+  }
+}

@@ -1,10 +1,21 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from "@auth/auth.module";
+import { AppointmentsModule } from "@appointments/appointments.module";
+import { MedicineModule } from "@medicine/medicine.module";
+import { MedicineConsumptionModule } from "@medicine-consumption/medicine-consumption.module";
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { SharedModule } from "@shared/shared.module";
+import { UsersModule } from "@users/users.module";
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot(),
+    SharedModule,
+    UsersModule,
+    MedicineModule,
+    MedicineConsumptionModule,
+    AppointmentsModule,
+    // AuthModule,
+  ],
 })
 export class AppModule {}
