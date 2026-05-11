@@ -1,5 +1,6 @@
 import { AuthModule } from "@auth/auth.module";
 import { AppointmentsModule } from "@appointments/appointments.module";
+import { CaregiverDependentsModule } from "@caregiver-dependents/caregiver-dependents.module";
 import { MedicineModule } from "@medicine/medicine.module";
 import { MedicineConsumptionModule } from "@medicine-consumption/medicine-consumption.module";
 import { Module } from "@nestjs/common";
@@ -15,6 +16,7 @@ import { UsersModule } from "@users/users.module";
     MedicineModule,
     MedicineConsumptionModule,
     AppointmentsModule,
+    CaregiverDependentsModule,
     // AuthModule,
   ],
 })

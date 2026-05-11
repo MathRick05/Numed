@@ -52,17 +52,24 @@
       "breakpoints": true
     },
     {
-      "idx": 7,
-      "version": "7",
-      "when": 1777907000000,
-      "tag": "0007_add_users_is_caregiver",
-      "breakpoints": true
-    },
-    {
       "idx": 8,
       "version": "7",
       "when": 1777933734930,
       "tag": "0008_nifty_ben_urich",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1777935899000,
+      "tag": "0009_create_caregiver_dependents",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1777936422375,
+      "tag": "0010_faulty_hercules",
       "breakpoints": true
     }
   ]

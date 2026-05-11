@@ -27,6 +27,7 @@
       "@attendance/*": ["src/modules/attendance/*"],
       "@class-offering/*": ["src/modules/class-offering/*"],
       "@enrollment/*": ["src/modules/enrollment/*"],
+      "@caregiver-dependents/*": ["src/modules/caregiver-dependents/*"],
       "@appointments/*": ["src/modules/appointments/*"],
       "@medicine/*": ["src/modules/medicine/*"],
       "@medicine-consumption/*": ["src/modules/medicine-consumption/*"],

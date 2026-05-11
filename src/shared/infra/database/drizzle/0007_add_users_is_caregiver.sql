@@ -1,1 +1,0 @@
-ALTER TABLE "users" ADD COLUMN "is_caregiver" boolean DEFAULT false NOT NULL;

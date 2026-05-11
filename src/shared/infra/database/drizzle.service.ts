@@ -1,5 +1,6 @@
 import { Injectable, type OnModuleDestroy } from "@nestjs/common";
 import { appointmentsSchema } from "@appointments/infra/database/schemas/appointment.schema";
+import { caregiverDependentsSchema } from "@caregiver-dependents/infra/database/schemas/caregiver-dependent.schema";
 import { medicinesSchema } from "@medicine/infra/database/schemas/medicine.schema";
 import { medicineConsumptionDetailsSchema } from "@medicine-consumption/infra/database/schemas/medicine-consumption-details.schema";
 import { medicineConsumptionTimesSchema } from "@medicine-consumption/infra/database/schemas/medicine-consumption-times.schema";
@@ -9,6 +10,7 @@ import { Pool } from "pg";
 
 const schema = {
   appointmentsSchema,
+  caregiverDependentsSchema,
   medicinesSchema,
   medicineConsumptionDetailsSchema,
   medicineConsumptionTimesSchema,
