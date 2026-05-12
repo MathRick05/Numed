@@ -4,8 +4,6 @@ import {
   DefaultValuePipe,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -14,8 +12,8 @@ import {
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
@@ -75,27 +73,29 @@ export class UsersController {
   @Post()
   @RequirePermissions(Permission.USERS_WRITE)
   @ApiOperation({ summary: "Criar usuário" })
+  @ApiOkResponse({ description: "Usuário criado com sucesso" })
   async create(@Body() body: CreateUserDto) {
-    return this.userService.create(body);
+    await this.userService.create(body);
+    return { message: "Usuário criado com sucesso" };
   }
 
   @Put(":id")
-  @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermissions(Permission.USERS_WRITE)
   @ApiOperation({ summary: "Atualizar usuário" })
-  @ApiNoContentResponse({ description: "Usuário atualizado" })
+  @ApiOkResponse({ description: "Usuário atualizado com sucesso" })
   @ApiNotFoundResponse({ description: "Usuário não encontrado" })
   async update(@Param("id") id: string, @Body() body: UpdateUserDto) {
-    return this.userService.edit(id, body);
+    await this.userService.edit(id, body);
+    return { message: "Usuário atualizado com sucesso" };
   }
 
   @Delete(":id")
-  @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermissions(Permission.USERS_DELETE)
   @ApiOperation({ summary: "Remover usuário" })
-  @ApiNoContentResponse({ description: "Usuário removido" })
+  @ApiOkResponse({ description: "Usuário removido com sucesso" })
   @ApiNotFoundResponse({ description: "Usuário não encontrado" })
   async remove(@Param("id") id: string) {
-    return this.userService.remove(id);
+    await this.userService.remove(id);
+    return { message: "Usuário removido com sucesso" };
   }
 }
