@@ -8,4 +8,7 @@ export enum Permission {
   APPOINTMENTS_READ = "appointments:read",
   APPOINTMENTS_WRITE = "appointments:write",
   APPOINTMENTS_DELETE = "appointments:delete",
+  REMINDERS_READ = "reminders:read",
+  REMINDERS_WRITE = "reminders:write",
+  REMINDERS_DELETE = "reminders:delete",
 }

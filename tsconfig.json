@@ -31,6 +31,7 @@
       "@appointments/*": ["src/modules/appointments/*"],
       "@medicine/*": ["src/modules/medicine/*"],
       "@medicine-consumption/*": ["src/modules/medicine-consumption/*"],
+      "@reminders/*": ["src/modules/reminders/*"],
       "@users/*": ["src/modules/users/*"],
       "@auth/*": ["src/modules/auth/*"]
     }

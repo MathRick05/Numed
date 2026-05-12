@@ -71,6 +71,13 @@
       "when": 1777936422375,
       "tag": "0010_faulty_hercules",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1777937200000,
+      "tag": "0011_create_reminders",
+      "breakpoints": true
     }
   ]
 }

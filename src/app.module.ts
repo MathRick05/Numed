@@ -5,6 +5,7 @@ import { MedicineModule } from "@medicine/medicine.module";
 import { MedicineConsumptionModule } from "@medicine-consumption/medicine-consumption.module";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { RemindersModule } from "@reminders/reminders.module";
 import { SharedModule } from "@shared/shared.module";
 import { UsersModule } from "@users/users.module";
 
@@ -17,6 +18,7 @@ import { UsersModule } from "@users/users.module";
     MedicineConsumptionModule,
     AppointmentsModule,
     CaregiverDependentsModule,
+    RemindersModule,
     // AuthModule,
   ],
 })
