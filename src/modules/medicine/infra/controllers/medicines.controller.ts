@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Post,
   Put,
@@ -12,8 +10,8 @@ import {
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
@@ -61,31 +59,33 @@ export class MedicinesController {
   @Post()
   @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Criar remédio para o usuário" })
+  @ApiOkResponse({ description: "Remédio criado com sucesso" })
   async create(@Param("userId") userId: string, @Body() body: CreateMedicineDto) {
-    return this.medicineService.create(userId, body);
+    await this.medicineService.create(userId, body);
+    return { message: "Remédio criado com sucesso" };
   }
 
   @Put(":id")
-  @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Atualizar remédio do usuário" })
-  @ApiNoContentResponse({ description: "Remédio atualizado" })
+  @ApiOkResponse({ description: "Remédio atualizado com sucesso" })
   @ApiNotFoundResponse({ description: "Remédio não encontrado" })
   async update(
     @Param("userId") userId: string,
     @Param("id") id: string,
     @Body() body: UpdateMedicineDto,
   ) {
-    return this.medicineService.edit(userId, id, body);
+    await this.medicineService.edit(userId, id, body);
+    return { message: "Remédio atualizado com sucesso" };
   }
 
   @Delete(":id")
-  @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermissions(Permission.MEDICINES_DELETE)
   @ApiOperation({ summary: "Remover remédio do usuário" })
-  @ApiNoContentResponse({ description: "Remédio removido" })
+  @ApiOkResponse({ description: "Remédio removido com sucesso" })
   async remove(@Param("userId") userId: string, @Param("id") id: string) {
-    return this.medicineService.remove(userId, id);
+    await this.medicineService.remove(userId, id);
+    return { message: "Remédio removido com sucesso" };
   }
 
   private toPositiveInt(value: unknown, defaultValue: number): number {

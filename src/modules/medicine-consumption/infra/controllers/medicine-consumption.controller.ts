@@ -6,15 +6,13 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Put,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
-  ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
@@ -38,25 +36,25 @@ export class MedicineConsumptionController {
   }
 
   @Put()
-  @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Criar/atualizar configuração de consumo do remédio" })
-  @ApiNoContentResponse({ description: "Configuração salva" })
+  @ApiOkResponse({ description: "Configuração de consumo salva com sucesso" })
   @ApiNotFoundResponse({ description: "Remédio não encontrado" })
   async upsert(
     @Param("userId") userId: string,
     @Param("medicineId") medicineId: string,
     @Body() body: UpsertMedicineConsumptionDto,
   ) {
-    return this.medicineConsumptionService.upsert(userId, medicineId, body);
+    await this.medicineConsumptionService.upsert(userId, medicineId, body);
+    return { message: "Configuração de consumo salva com sucesso" };
   }
 
   @Delete()
-  @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Remover configuração de consumo do remédio" })
-  @ApiNoContentResponse({ description: "Configuração removida" })
+  @ApiOkResponse({ description: "Configuração de consumo removida com sucesso" })
   async remove(@Param("userId") userId: string, @Param("medicineId") medicineId: string) {
-    return this.medicineConsumptionService.remove(userId, medicineId);
+    await this.medicineConsumptionService.remove(userId, medicineId);
+    return { message: "Configuração de consumo removida com sucesso" };
   }
 }
