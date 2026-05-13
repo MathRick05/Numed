@@ -3,6 +3,14 @@ import { TreatmentDurationUnit } from "@medicine-consumption/domain/enums/treatm
 import type { MedicineConsumptionDetails } from "@medicine-consumption/domain/models/medicine-consumption-details.entity";
 import type { MedicineConsumptionTime } from "@medicine-consumption/domain/models/medicine-consumption-time.entity";
 
+export class ConsumptionTimeDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty({ example: "08:00" })
+  hora: string;
+}
+
 export class MedicineConsumptionResponseDto {
   @ApiProperty()
   medicineId: string;
@@ -16,15 +24,15 @@ export class MedicineConsumptionResponseDto {
   @ApiProperty({ nullable: true })
   duracaoValor: number | null;
 
-  @ApiProperty({ isArray: true, type: String, example: ["08:00", "20:00"] })
-  horarios: string[];
+  @ApiProperty({ isArray: true, type: ConsumptionTimeDto })
+  horarios: ConsumptionTimeDto[];
 
   private constructor(
     medicineId: string,
     intervaloDias: number,
     duracaoUnidade: TreatmentDurationUnit,
     duracaoValor: number | null,
-    horarios: string[],
+    horarios: ConsumptionTimeDto[],
   ) {
     this.medicineId = medicineId;
     this.intervaloDias = intervaloDias;
@@ -44,7 +52,7 @@ export class MedicineConsumptionResponseDto {
       details.intervaloDias,
       details.duracaoUnidade,
       details.duracaoValor,
-      times.map((t) => t.hora),
+      times.map((t) => ({ id: t.id!, hora: t.hora })),
     );
   }
 }
