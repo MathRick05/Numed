@@ -17,6 +17,7 @@ export class DrizzleUserRepository implements UserRepository {
       phone: user.phone,
       password: user.password,
       isCaregiver: user.isCaregiver,
+      isPremium: user.isPremium,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -31,6 +32,7 @@ export class DrizzleUserRepository implements UserRepository {
         phone: user.phone,
         password: user.password,
         isCaregiver: user.isCaregiver,
+        isPremium: user.isPremium,
         updatedAt: new Date(),
       })
       .where(eq(usersSchema.id, user.id!));
@@ -64,6 +66,14 @@ export class DrizzleUserRepository implements UserRepository {
 
   async findAll(): Promise<User[]> {
     const rows = await this.drizzleService.db.select().from(usersSchema);
+    return rows.map((row) => User.restore(row)!);
+  }
+
+  async findAllPremium(): Promise<User[]> {
+    const rows = await this.drizzleService.db
+      .select()
+      .from(usersSchema)
+      .where(eq(usersSchema.isPremium, true));
     return rows.map((row) => User.restore(row)!);
   }
 

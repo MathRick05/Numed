@@ -1,4 +1,4 @@
-import { CreateReminderDto } from "@medicine-consumption/application/dto/create-reminder.dto";
+import { CreateMedicineReminderDto } from "@medicine-consumption/application/dto/create-reminder.dto";
 import { ListRemindersQueryDto } from "@medicine-consumption/application/dto/list-reminders-query.dto";
 import { ReminderResponseDto } from "@medicine-consumption/application/dto/reminder-response.dto";
 import { MedicineReminderService } from "@medicine-consumption/application/services/medicine-reminder.service";
@@ -35,7 +35,7 @@ export class MedicineReminderController {
   async create(
     @Param("userId") userId: string,
     @Param("medicineId") medicineId: string,
-    @Body() body: CreateReminderDto,
+    @Body() body: CreateMedicineReminderDto,
   ): Promise<ReminderResponseDto> {
     return this.medicineReminderService.create(userId, medicineId, body);
   }
