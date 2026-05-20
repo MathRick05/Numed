@@ -18,6 +18,9 @@ export class UserResponseDto {
   cuidador: boolean;
 
   @ApiProperty()
+  premium: boolean;
+
+  @ApiProperty()
   createdAt: Date | undefined;
 
   @ApiProperty()
@@ -29,6 +32,7 @@ export class UserResponseDto {
     email: string,
     telefone: string,
     cuidador: boolean,
+    premium: boolean,
     createdAt: Date | undefined,
     updatedAt: Date | undefined,
   ) {
@@ -37,6 +41,7 @@ export class UserResponseDto {
     this.email = email;
     this.telefone = telefone;
     this.cuidador = cuidador;
+    this.premium = premium;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -49,6 +54,7 @@ export class UserResponseDto {
       user.email,
       user.phone,
       user.isCaregiver,
+      user.isPremium,
       user.createdAt,
       user.updatedAt,
     );

@@ -90,6 +90,25 @@ export class UserService {
     return UserResponseDto.from(user);
   }
 
+  async listPremium(): Promise<UserResponseDto[]> {
+    const users = await this.userRepository.findAllPremium();
+    return users.map((u) => UserResponseDto.from(u)!);
+  }
+
+  async upgradeToPremium(id: string): Promise<void> {
+    const user = await this.userRepository.findById(id);
+    if (!user) throw new NotFoundException("User not found");
+    user.withIsPremium(true);
+    await this.userRepository.update(user);
+  }
+
+  async downgradeToPremium(id: string): Promise<void> {
+    const user = await this.userRepository.findById(id);
+    if (!user) throw new NotFoundException("User not found");
+    user.withIsPremium(false);
+    await this.userRepository.update(user);
+  }
+
   async validateCredentials(
     email: string,
     password: string,

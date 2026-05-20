@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString, IsUUID } from "class-validator";
 
-export class CreateReminderDto {
+export class CreateMedicineReminderDto {
   @ApiProperty({ description: "ID do horário de consumo agendado", example: "uuid-do-horario" })
   @IsUUID()
   consumptionTimeId: string;

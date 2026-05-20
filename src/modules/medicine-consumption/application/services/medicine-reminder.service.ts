@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import type { CreateReminderDto } from "@medicine-consumption/application/dto/create-reminder.dto";
+import type { CreateMedicineReminderDto } from "@medicine-consumption/application/dto/create-reminder.dto";
 import type { ListRemindersQueryDto } from "@medicine-consumption/application/dto/list-reminders-query.dto";
 import { ReminderResponseDto } from "@medicine-consumption/application/dto/reminder-response.dto";
 import { ReminderStatus } from "@medicine-consumption/domain/enums/reminder-status.enum";
@@ -19,7 +19,7 @@ export class MedicineReminderService {
   async create(
     userId: string,
     medicineId: string,
-    dto: CreateReminderDto,
+    dto: CreateMedicineReminderDto,
   ): Promise<ReminderResponseDto> {
     const reminder = MedicineReminder.restore({
       consumptionTimeId: dto.consumptionTimeId,

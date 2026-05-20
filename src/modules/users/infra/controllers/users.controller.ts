@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -31,6 +32,22 @@ import { UserService } from "@users/application/services/user.service";
 @Controller("users")
 export class UsersController {
   constructor(private readonly userService: UserService) {}
+
+  @Get("premium")
+  @RequirePermissions(Permission.USERS_READ)
+  @ApiOperation({ summary: "Listar usuários premium" })
+  @HateoasList<UserResponseDto>({
+    basePath: "/v1/users/premium",
+    itemLinks: (item) => ({
+      self: { href: `/v1/users/${item.id}`, method: "GET" },
+      update: { href: `/v1/users/${item.id}`, method: "PUT" },
+      delete: { href: `/v1/users/${item.id}`, method: "DELETE" },
+    }),
+  })
+  async findAllPremium() {
+    const users = await this.userService.listPremium();
+    return { data: users, total: users.length, page: 1, limit: users.length };
+  }
 
   @Get()
   @RequirePermissions(Permission.USERS_READ)
@@ -97,5 +114,25 @@ export class UsersController {
   async remove(@Param("id") id: string) {
     await this.userService.remove(id);
     return { message: "Usuário removido com sucesso" };
+  }
+
+  @Patch(":id/premium")
+  @RequirePermissions(Permission.USERS_WRITE)
+  @ApiOperation({ summary: "Ativar premium do usuário" })
+  @ApiOkResponse({ description: "Premium ativado com sucesso" })
+  @ApiNotFoundResponse({ description: "Usuário não encontrado" })
+  async activatePremium(@Param("id") id: string) {
+    await this.userService.upgradeToPremium(id);
+    return { message: "Premium ativado com sucesso" };
+  }
+
+  @Delete(":id/premium")
+  @RequirePermissions(Permission.USERS_WRITE)
+  @ApiOperation({ summary: "Desativar premium do usuário" })
+  @ApiOkResponse({ description: "Premium desativado com sucesso" })
+  @ApiNotFoundResponse({ description: "Usuário não encontrado" })
+  async deactivatePremium(@Param("id") id: string) {
+    await this.userService.downgradeToPremium(id);
+    return { message: "Premium desativado com sucesso" };
   }
 }

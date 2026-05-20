@@ -9,6 +9,7 @@ export interface UserRepository {
   delete(id: string): Promise<void>;
   findAll(): Promise<User[]>;
   findAllPaginated(params: PaginationParams): Promise<{ rows: User[]; total: number }>;
+  findAllPremium(): Promise<User[]>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
 }
