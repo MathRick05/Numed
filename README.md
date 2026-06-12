@@ -1,84 +1,107 @@
-# Numed API
+# Numed Monorepo
 
-API REST para de projeto academico numed, construído com NestJS + Drizzle ORM + PostgreSQL.
+Projeto de microservicos para saude e bem-estar, organizado como monorepo com servicos NestJS independentes, bancos separados por contexto e comunicacao assincrona via RabbitMQ.
 
-## Pré-requisitos
+Cada micro-servico possui:
 
-- [Node.js](https://nodejs.org) >= 20
-- [npm](https://www.npmjs.com) >= 10
-- [PostgreSQL](https://www.postgresql.org) >= 14 rodando localmente (ou via Docker)
+- API HTTP com prefixo global `/v1`
+- Documentacao Swagger em `/docs`
+- Banco PostgreSQL proprio
+- Integracao por eventos para manter projecoes locais entre contextos
+- Autenticacao JWT e autorizacao por permissoes
 
-## Configuração
+## Micro-servicos
 
-### 1. Instalar dependências
+| Servico | Porta | Banco | Responsabilidade |
+| --- | --- | --- | --- |
+| `user-auth` | `4005` | `numed_user_auth` | Usuarios, login, JWT e permissoes |
+| `numed-health` | `4008` | `numed_health` | Medicamentos, consumo e vinculos cuidador-dependente |
+| `reminders` | `4009` | `numed_reminders` | Lembretes e consultas medicas |
+
+## Relacao entre os servicos
+
+| Servico | Publica | Consome |
+| --- | --- | --- |
+| `user-auth` | `user.created/updated/deleted` | — |
+| `numed-health` | `medicine.created/updated/deleted`, `medicine-consumption.upserted` | `user.created/updated/deleted` |
+| `reminders` | `appointment.created/updated/deleted`, `reminder.created/updated/deleted` | `user.created/updated/deleted`, `medicine-consumption.upserted` |
+
+Quando o consumo de um medicamento e configurado no `numed-health`, o `reminders` cria automaticamente lembretes para cada horario definido.
+
+## Pre-requisitos
+
+- Node.js com `npm`
+- Docker e Docker Compose
+
+## Como rodar
+
+### Infraestrutura
 
 ```bash
-npm install
+docker compose up -d postgres rabbitmq
 ```
 
-### 2. Configurar variáveis de ambiente
+### Servicos (cada um em um terminal)
 
-Crie um arquivo `.env` na raiz do projeto com base no exemplo abaixo:
+```bash
+npm run start:user-auth      # porta 4005
+npm run start:numed-health   # porta 4008
+npm run start:reminders      # porta 4009
+```
+
+Na primeira execucao, rode as migrations:
+
+```bash
+npm run db:migrate --prefix services/user-auth
+npm run db:migrate --prefix services/numed-health
+npm run db:migrate --prefix services/reminders
+```
+
+## Variaveis de ambiente
+
+Cada servico tem um `.env` na sua pasta. Exemplo:
 
 ```env
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/numed
-PORT=3001
+PORT=4008
+JWT_SECRET=super-secret
+DATABASE_URL=postgres://postgres:postgres@localhost:5433/numed_health
+RABBITMQ_URL=amqp://admin:admin@localhost:5672
 ```
 
-| Variável | Descrição |
-|---|---|
-| `DATABASE_URL` | Connection string do PostgreSQL |
-| `PORT` | Porta em que a API vai subir |
+O `JWT_SECRET` deve ser o mesmo em todos os servicos.
 
-### 3. Criar e migrar o banco de dados
+## Ferramentas
 
-Com o PostgreSQL rodando, execute as migrações para criar as tabelas:
+| Ferramenta | URL | Credenciais |
+| --- | --- | --- |
+| Swagger user-auth | http://localhost:4005/docs | — |
+| Swagger numed-health | http://localhost:4008/docs | — |
+| Swagger reminders | http://localhost:4009/docs | — |
+| Adminer (banco) | http://localhost:8080 | postgres / postgres |
+| RabbitMQ Management | http://localhost:15672 | admin / admin |
 
-```bash
-npm run db:migrate
-```
+No Adminer use servidor `postgres` e escolha entre `numed_user_auth`, `numed_health` ou `numed_reminders`.
 
-## Rodando a aplicação
+## Autenticacao
 
-### Desenvolvimento (com hot reload)
+1. Crie um usuario em `POST /v1/users` no user-auth
+2. Faca login em `POST /v1/auth/login`
+3. Use o token JWT como `Bearer Token` nos demais servicos
 
-```bash
-npm run start:dev
-```
+## Permissoes disponiveis
 
-### Produção
+| Permissao | Descricao |
+| --- | --- |
+| `users:read/write/delete` | Gerenciar usuarios |
+| `medicines:read/write/delete` | Gerenciar medicamentos |
+| `caregiver-dependents:read/write/delete` | Gerenciar vinculos cuidador-dependente |
+| `appointments:read/write/delete` | Gerenciar consultas |
+| `reminders:read/write/delete` | Gerenciar lembretes |
 
-```bash
-npm run build
-npm run start:prod
-```
+## Fluxo de teste sugerido
 
-A API ficará disponível em `http://localhost:3001` (ou na porta configurada em `PORT`).
-
-## Scripts disponíveis
-
-| Script | Descrição |
-|---|---|
-| `npm run start:dev` | Inicia em modo desenvolvimento com hot reload |
-| `npm run start` | Inicia sem hot reload |
-| `npm run start:prod` | Inicia o build de produção |
-| `npm run build` | Gera o build de produção em `dist/` |
-| `npm run db:generate` | Gera arquivos de migration a partir dos schemas |
-| `npm run db:migrate` | Aplica as migrations no banco |
-| `npm run db:push` | Sincroniza o schema diretamente no banco (sem migration) |
-| `npm run db:studio` | Abre o Drizzle Studio para inspecionar o banco visualmente |
-| `npm run lint` | Executa o linter (Biome) |
-| `npm run check` | Executa lint + formatação (Biome) |
-
-## Subindo o PostgreSQL com Docker
-
-Caso não tenha o PostgreSQL instalado localmente, suba uma instância com Docker:
-
-```bash
-docker run --name numed-db \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=numed \
-  -p 5432:5432 \
-  -d postgres:16
-```
+1. Criar usuario no `user-auth`
+2. Fazer login e pegar o JWT
+3. Criar medicamento no `numed-health`
+4. Configurar consumo com horarios — lembretes sao criados automaticamente no `reminders`
+5. Consultar lembretes no `reminders`
