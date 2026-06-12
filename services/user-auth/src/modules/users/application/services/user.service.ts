@@ -9,6 +9,7 @@ import { CreateUserDto } from "@users/application/dto/create-user.dto";
 import { UpdateUserDto } from "@users/application/dto/update-user.dto";
 import { UserPayload } from "@users/application/dto/user-payload.interface";
 import { UserResponseDto } from "@users/application/dto/user-response.dto";
+import { UserMessagingService } from "@users/application/services/user-messaging.service";
 import { User } from "@users/domain/models/user.entity";
 import {
   USER_REPOSITORY,
@@ -21,6 +22,7 @@ export class UserService {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepository,
+    private readonly userMessagingService: UserMessagingService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<void> {
@@ -39,6 +41,11 @@ export class UserService {
     })!;
 
     await this.userRepository.create(user);
+
+    const created = await this.userRepository.findByEmail(user.email);
+    if (created) {
+      await this.userMessagingService.publishUserCreated(UserResponseDto.from(created)!);
+    }
   }
 
   async edit(id: string, dto: UpdateUserDto): Promise<void> {
@@ -67,10 +74,12 @@ export class UserService {
       user.withPermissions(dto.permissions as string[]);
 
     await this.userRepository.update(user);
+    await this.userMessagingService.publishUserUpdated(UserResponseDto.from(user)!);
   }
 
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
+    await this.userMessagingService.publishUserDeleted(id);
   }
 
   async list(): Promise<UserResponseDto[]> {

@@ -44,7 +44,7 @@ export class CreateUserDto {
   @ApiProperty({
     enum: Permission,
     isArray: true,
-    example: [Permission.STUDENTS_READ],
+    example: [Permission.MEDICINES_READ],
     required: false,
   })
   @IsArray()

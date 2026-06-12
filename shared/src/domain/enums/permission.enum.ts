@@ -1,7 +1,15 @@
 export enum Permission {
-  STUDENTS_READ = "students:read",
-  STUDENTS_WRITE = "students:write",
-  STUDENTS_DELETE = "students:delete",
+  USERS_READ = "users:read",
+  USERS_WRITE = "users:write",
+  USERS_DELETE = "users:delete",
+
+  MEDICINES_READ = "medicines:read",
+  MEDICINES_WRITE = "medicines:write",
+  MEDICINES_DELETE = "medicines:delete",
+
+  CAREGIVER_DEPENDENTS_READ = "caregiver-dependents:read",
+  CAREGIVER_DEPENDENTS_WRITE = "caregiver-dependents:write",
+  CAREGIVER_DEPENDENTS_DELETE = "caregiver-dependents:delete",
 
   APPOINTMENTS_READ = "appointments:read",
   APPOINTMENTS_WRITE = "appointments:write",
@@ -10,28 +18,4 @@ export enum Permission {
   REMINDERS_READ = "reminders:read",
   REMINDERS_WRITE = "reminders:write",
   REMINDERS_DELETE = "reminders:delete",
-
-  TEACHERS_READ = "teachers:read",
-  TEACHERS_WRITE = "teachers:write",
-  TEACHERS_DELETE = "teachers:delete",
-
-  SUBJECTS_READ = "subjects:read",
-  SUBJECTS_WRITE = "subjects:write",
-  SUBJECTS_DELETE = "subjects:delete",
-
-  CLASS_OFFERINGS_READ = "class-offerings:read",
-  CLASS_OFFERINGS_WRITE = "class-offerings:write",
-  CLASS_OFFERINGS_DELETE = "class-offerings:delete",
-
-  ENROLLMENTS_READ = "enrollments:read",
-  ENROLLMENTS_WRITE = "enrollments:write",
-  ENROLLMENTS_DELETE = "enrollments:delete",
-
-  ATTENDANCES_READ = "attendances:read",
-  ATTENDANCES_WRITE = "attendances:write",
-  ATTENDANCES_DELETE = "attendances:delete",
-
-  USERS_READ = "users:read",
-  USERS_WRITE = "users:write",
-  USERS_DELETE = "users:delete",
 }

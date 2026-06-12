@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "rootDir": "../..",
+    "paths": {
+      "@appointments/*": [
+        "./src/modules/academic/appointments/*"
+      ],
+      "@reminders/*": [
+        "./src/modules/academic/reminders/*"
+      ],
+      "@shared/*": [
+        "../../shared/src/*"
+      ],
+      "@academic/*": [
+        "./src/modules/academic/*"
+      ],
+      "@integrations/*": [
+        "./src/modules/integrations/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "../../shared/src/**/*.ts"
+  ]
+}

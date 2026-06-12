@@ -44,7 +44,7 @@ export class UpdateUserDto {
     enum: Permission,
     isArray: true,
     required: false,
-    example: [Permission.STUDENTS_READ],
+    example: [Permission.MEDICINES_READ],
   })
   @IsArray()
   @IsEnum(Permission, { each: true })

@@ -1,5 +1,5 @@
 {
-  "name": "@school-control/user-auth",
+  "name": "@numed/user-auth",
   "version": "0.1.0",
   "private": true,
   "scripts": {

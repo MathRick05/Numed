@@ -1,24 +1,14 @@
-SELECT 'CREATE DATABASE school_academic'
+SELECT 'CREATE DATABASE numed_health'
 WHERE NOT EXISTS (
-  SELECT FROM pg_database WHERE datname = 'school_academic'
+  SELECT FROM pg_database WHERE datname = 'numed_health'
 )\gexec
 
-SELECT 'CREATE DATABASE school_class_offering'
+SELECT 'CREATE DATABASE numed_reminders'
 WHERE NOT EXISTS (
-  SELECT FROM pg_database WHERE datname = 'school_class_offering'
+  SELECT FROM pg_database WHERE datname = 'numed_reminders'
 )\gexec
 
-SELECT 'CREATE DATABASE school_enrollment'
+SELECT 'CREATE DATABASE numed_user_auth'
 WHERE NOT EXISTS (
-  SELECT FROM pg_database WHERE datname = 'school_enrollment'
-)\gexec
-
-SELECT 'CREATE DATABASE school_attendance'
-WHERE NOT EXISTS (
-  SELECT FROM pg_database WHERE datname = 'school_attendance'
-)\gexec
-
-SELECT 'CREATE DATABASE school_user_auth'
-WHERE NOT EXISTS (
-  SELECT FROM pg_database WHERE datname = 'school_user_auth'
+  SELECT FROM pg_database WHERE datname = 'numed_user_auth'
 )\gexec
