@@ -15,6 +15,11 @@ export async function bootstrapHttpApp(
   options: BootstrapHttpAppOptions,
 ): Promise<void> {
   const app = await NestFactory.create(rootModule);
+  app.enableCors({
+    origin: "*",
+    methods: "*",
+    allowedHeaders: "*",
+  });
 
   app.setGlobalPrefix(options.globalPrefix ?? "v1");
   app.useGlobalPipes(
