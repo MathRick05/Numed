@@ -1,3 +1,4 @@
+import type { ForgotPasswordDto } from "@auth/application/dto/forgot-password.dto";
 import type { LoginDto } from "@auth/application/dto/login.dto";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
@@ -25,5 +26,17 @@ export class AuthService {
     });
 
     return { accessToken };
+  }
+
+  async requestPasswordRecovery(
+    dto: ForgotPasswordDto,
+  ): Promise<{ message: string }> {
+    const email = dto.email.toLowerCase();
+    await this.userService.emailExists(email);
+
+    return {
+      message:
+        "Se o e-mail estiver cadastrado, enviaremos instrucoes para recuperar sua senha.",
+    };
   }
 }

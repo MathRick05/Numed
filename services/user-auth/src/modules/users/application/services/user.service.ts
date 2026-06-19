@@ -44,7 +44,9 @@ export class UserService {
 
     const created = await this.userRepository.findByEmail(user.email);
     if (created) {
-      await this.userMessagingService.publishUserCreated(UserResponseDto.from(created)!);
+      await this.userMessagingService.publishUserCreated(
+        UserResponseDto.from(created)!,
+      );
     }
   }
 
@@ -74,7 +76,9 @@ export class UserService {
       user.withPermissions(dto.permissions as string[]);
 
     await this.userRepository.update(user);
-    await this.userMessagingService.publishUserUpdated(UserResponseDto.from(user)!);
+    await this.userMessagingService.publishUserUpdated(
+      UserResponseDto.from(user)!,
+    );
   }
 
   async remove(id: string): Promise<void> {
@@ -102,6 +106,11 @@ export class UserService {
   async findById(id: string): Promise<UserResponseDto | null> {
     const user = await this.userRepository.findById(id);
     return UserResponseDto.from(user);
+  }
+
+  async emailExists(email: string): Promise<boolean> {
+    const user = await this.userRepository.findByEmail(email.toLowerCase());
+    return Boolean(user);
   }
 
   async validateCredentials(

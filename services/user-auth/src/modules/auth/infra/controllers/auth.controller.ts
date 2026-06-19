@@ -1,3 +1,4 @@
+import { ForgotPasswordDto } from "@auth/application/dto/forgot-password.dto";
 import { LoginDto } from "@auth/application/dto/login.dto";
 import { AuthService } from "@auth/application/services/auth.service";
 import { Body, Controller, Post } from "@nestjs/common";
@@ -19,5 +20,12 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: "Credenciais inválidas" })
   async login(@Body() body: LoginDto) {
     return this.authService.login(body);
+  }
+
+  @Post("forgot-password")
+  @Public()
+  @ApiOperation({ summary: "Solicitar recuperacao de senha" })
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    return this.authService.requestPasswordRecovery(body);
   }
 }
