@@ -19,7 +19,7 @@ export class MedicineConsumptionController {
   constructor(private readonly medicineConsumptionService: MedicineConsumptionService) {}
 
   @Get()
-  @RequirePermissions(Permission.MEDICINES_READ)
+  // @RequirePermissions(Permission.MEDICINES_READ)
   @ApiOperation({ summary: "Buscar configuração de consumo do remédio" })
   async findByMedicineId(
     @Param("userId") userId: string,
@@ -30,7 +30,7 @@ export class MedicineConsumptionController {
 
   @Put()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @RequirePermissions(Permission.MEDICINES_WRITE)
+  // @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Criar/atualizar configuração de consumo do remédio" })
   @ApiNoContentResponse({ description: "Configuração de consumo salva" })
   @ApiNotFoundResponse({ description: "Remédio não encontrado" })
@@ -44,7 +44,7 @@ export class MedicineConsumptionController {
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @RequirePermissions(Permission.MEDICINES_WRITE)
+  // @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Remover configuração de consumo do remédio" })
   @ApiNoContentResponse({ description: "Configuração de consumo removida" })
   async remove(@Param("userId") userId: string, @Param("medicineId") medicineId: string) {

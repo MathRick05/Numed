@@ -1,28 +1,117 @@
 {
-  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "id": "e2307e7b-464e-4769-bfc0-907512c5cfaa",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.medicines": {
-      "name": "medicines",
+    "public.users": {
+      "name": "users",
       "schema": "",
       "columns": {
-        "id": { "name": "id", "type": "uuid", "primaryKey": true, "notNull": true, "default": "gen_random_uuid()" },
-        "user_id": { "name": "user_id", "type": "uuid", "primaryKey": false, "notNull": true },
-        "nome": { "name": "nome", "type": "text", "primaryKey": false, "notNull": true },
-        "tipo": { "name": "tipo", "type": "text", "primaryKey": false, "notNull": true },
-        "numero_dosagem": { "name": "numero_dosagem", "type": "integer", "primaryKey": false, "notNull": true },
-        "unidade_dosagem": { "name": "unidade_dosagem", "type": "text", "primaryKey": false, "notNull": true },
-        "quantidade_guardada": { "name": "quantidade_guardada", "type": "integer", "primaryKey": false, "notNull": true },
-        "instrucoes": { "name": "instrucoes", "type": "text", "primaryKey": false, "notNull": true },
-        "created_at": { "name": "created_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true },
-        "updated_at": { "name": "updated_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true }
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone": {
+          "name": "phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_caregiver": {
+          "name": "is_caregiver",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_premium": {
+          "name": "is_premium",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.caregiver_dependents": {
+      "name": "caregiver_dependents",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "caregiver_id": {
+          "name": "caregiver_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dependent_id": {
+          "name": "dependent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "caregiver_dependents_caregiver_id_dependent_id_unique": {
+          "name": "caregiver_dependents_caregiver_id_dependent_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "caregiver_id",
+            "dependent_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -31,13 +120,49 @@
       "name": "medicine_consumption_details",
       "schema": "",
       "columns": {
-        "id": { "name": "id", "type": "uuid", "primaryKey": true, "notNull": true, "default": "gen_random_uuid()" },
-        "medicine_id": { "name": "medicine_id", "type": "uuid", "primaryKey": false, "notNull": true },
-        "intervalo_dias": { "name": "intervalo_dias", "type": "integer", "primaryKey": false, "notNull": true },
-        "duracao_unidade": { "name": "duracao_unidade", "type": "text", "primaryKey": false, "notNull": true },
-        "duracao_valor": { "name": "duracao_valor", "type": "integer", "primaryKey": false, "notNull": false },
-        "created_at": { "name": "created_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true },
-        "updated_at": { "name": "updated_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true }
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "medicine_id": {
+          "name": "medicine_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "intervalo_dias": {
+          "name": "intervalo_dias",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duracao_unidade": {
+          "name": "duracao_unidade",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duracao_valor": {
+          "name": "duracao_valor",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
       },
       "indexes": {},
       "foreignKeys": {
@@ -45,9 +170,12 @@
           "name": "medicine_consumption_details_medicine_id_medicines_id_fk",
           "tableFrom": "medicine_consumption_details",
           "tableTo": "medicines",
-          "schemaTo": "public",
-          "columnsFrom": ["medicine_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "medicine_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -62,11 +190,37 @@
       "name": "medicine_consumption_times",
       "schema": "",
       "columns": {
-        "id": { "name": "id", "type": "uuid", "primaryKey": true, "notNull": true, "default": "gen_random_uuid()" },
-        "details_id": { "name": "details_id", "type": "uuid", "primaryKey": false, "notNull": true },
-        "hora": { "name": "hora", "type": "text", "primaryKey": false, "notNull": true },
-        "created_at": { "name": "created_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true },
-        "updated_at": { "name": "updated_at", "type": "timestamp with time zone", "primaryKey": false, "notNull": true }
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "details_id": {
+          "name": "details_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hora": {
+          "name": "hora",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
       },
       "indexes": {},
       "foreignKeys": {
@@ -74,9 +228,12 @@
           "name": "medicine_consumption_times_details_id_medicine_consumption_details_id_fk",
           "tableFrom": "medicine_consumption_times",
           "tableTo": "medicine_consumption_details",
-          "schemaTo": "public",
-          "columnsFrom": ["details_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "details_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -87,24 +244,76 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.caregiver_dependents": {
-      "name": "caregiver_dependents",
+    "public.medicines": {
+      "name": "medicines",
       "schema": "",
       "columns": {
-        "id": { "name": "id", "type": "uuid", "primaryKey": true, "notNull": true, "default": "gen_random_uuid()" },
-        "caregiver_id": { "name": "caregiver_id", "type": "uuid", "primaryKey": false, "notNull": true },
-        "dependent_id": { "name": "dependent_id", "type": "uuid", "primaryKey": false, "notNull": true }
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_dosagem": {
+          "name": "numero_dosagem",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unidade_dosagem": {
+          "name": "unidade_dosagem",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantidade_guardada": {
+          "name": "quantidade_guardada",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instrucoes": {
+          "name": "instrucoes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "caregiver_dependents_caregiver_id_dependent_id_unique": {
-          "name": "caregiver_dependents_caregiver_id_dependent_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["caregiver_id", "dependent_id"]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

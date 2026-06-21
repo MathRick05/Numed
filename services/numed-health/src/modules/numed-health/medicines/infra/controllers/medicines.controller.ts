@@ -35,7 +35,7 @@ export class MedicinesController {
   constructor(private readonly medicineService: MedicineService) {}
 
   @Get()
-  @RequirePermissions(Permission.MEDICINES_READ)
+  // @RequirePermissions(Permission.MEDICINES_READ)
   @ApiOperation({ summary: "Listar remédios do usuário" })
   @ApiQuery({ name: "_page", required: false, type: Number })
   @ApiQuery({ name: "_size", required: false, type: Number })
@@ -56,7 +56,7 @@ export class MedicinesController {
   }
 
   @Get(":id")
-  @RequirePermissions(Permission.MEDICINES_READ)
+  // @RequirePermissions(Permission.MEDICINES_READ)
   @ApiOperation({ summary: "Buscar remédio por ID" })
   @ApiNotFoundResponse({ description: "Remédio não encontrado" })
   @HateoasItem<MedicineDto>({
@@ -73,7 +73,7 @@ export class MedicinesController {
   }
 
   @Post()
-  @RequirePermissions(Permission.MEDICINES_WRITE)
+  // @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Criar remédio para o usuário" })
   async create(@Param("userId") userId: string, @Body() body: CreateMedicineDto) {
     return this.medicineService.create(userId, body);
@@ -81,7 +81,7 @@ export class MedicinesController {
 
   @Put(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @RequirePermissions(Permission.MEDICINES_WRITE)
+  // @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Atualizar remédio do usuário" })
   @ApiNoContentResponse({ description: "Remédio atualizado" })
   @ApiNotFoundResponse({ description: "Remédio não encontrado" })
@@ -95,7 +95,7 @@ export class MedicinesController {
 
   @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @RequirePermissions(Permission.MEDICINES_DELETE)
+  // @RequirePermissions(Permission.MEDICINES_DELETE)
   @ApiOperation({ summary: "Remover remédio do usuário" })
   @ApiNoContentResponse({ description: "Remédio removido" })
   @ApiNotFoundResponse({ description: "Remédio não encontrado" })
