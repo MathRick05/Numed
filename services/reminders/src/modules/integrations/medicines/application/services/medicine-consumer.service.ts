@@ -92,18 +92,18 @@ export class MedicineConsumerService implements OnApplicationBootstrap, OnModule
 
     if (data.horarios.length === 0) return;
 
-    await this.drizzleService.db.insert(remindersSchema).values(
-      data.horarios.map((hora) => ({
-        userId: data.userId,
-        medicineId: data.medicineId,
-        titulo: `Tomar ${data.medicineName}`,
-        descricao: data.instrucoes,
-        data: today,
-        horario: hora,
-        createdAt: now,
-        updatedAt: now,
-      })),
-    );
+    // await this.drizzleService.db.insert(remindersSchema).values(
+    //   data.horarios.map((hora) => ({
+    //     userId: data.userId,
+    //     medicineId: data.medicineId,
+    //     titulo: `Tomar ${data.medicineName}`,
+    //     descricao: data.instrucoes,
+    //     data: today,
+    //     horario: hora,
+    //     createdAt: now,
+    //     updatedAt: now,
+    //   })),
+    // );
 
     this.logger.log(
       `Created ${data.horarios.length} reminder(s) for medicine "${data.medicineName}" (${data.medicineId})`,
