@@ -1,16 +1,23 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { TreatmentDurationUnit } from "@numed-health/medicine-consumption/domain/enums/treatment-duration-unit.enum";
+import { MedicineConsumptionConfirmation } from "@numed-health/medicine-consumption/domain/models/medicine-consumption-confirmation.entity";
 import { MedicineConsumptionDetails } from "@numed-health/medicine-consumption/domain/models/medicine-consumption-details.entity";
 import { MedicineConsumptionTime } from "@numed-health/medicine-consumption/domain/models/medicine-consumption-time.entity";
-import type { MedicineConsumptionRepository } from "@numed-health/medicine-consumption/domain/repositories/medicine-consumption-repository.interface";
+import type {
+  MedicineConsumptionData,
+  MedicineConsumptionRepository,
+} from "@numed-health/medicine-consumption/domain/repositories/medicine-consumption-repository.interface";
+import { medicineConsumptionConfirmationsSchema } from "@numed-health/medicine-consumption/infra/database/schemas/medicine-consumption-confirmations.schema";
 import { medicineConsumptionDetailsSchema } from "@numed-health/medicine-consumption/infra/database/schemas/medicine-consumption-details.schema";
 import { medicineConsumptionTimesSchema } from "@numed-health/medicine-consumption/infra/database/schemas/medicine-consumption-times.schema";
 import { medicinesSchema } from "@numed-health/medicines/infra/database/schemas/medicine.schema";
 import { DrizzleService } from "@shared/infra/database/drizzle.service";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 @Injectable()
-export class DrizzleMedicineConsumptionRepository implements MedicineConsumptionRepository {
+export class DrizzleMedicineConsumptionRepository
+  implements MedicineConsumptionRepository
+{
   constructor(private readonly drizzleService: DrizzleService) {}
 
   async upsertDetailsWithTimes(
@@ -23,10 +30,16 @@ export class DrizzleMedicineConsumptionRepository implements MedicineConsumption
       const medicine = await tx
         .select({ id: medicinesSchema.id })
         .from(medicinesSchema)
-        .where(and(eq(medicinesSchema.id, medicineId), eq(medicinesSchema.userId, userId)))
+        .where(
+          and(
+            eq(medicinesSchema.id, medicineId),
+            eq(medicinesSchema.userId, userId),
+          ),
+        )
         .limit(1);
 
-      if (medicine.length === 0) throw new NotFoundException("Medicine not found");
+      if (medicine.length === 0)
+        throw new NotFoundException("Medicine not found");
 
       const existing = await tx
         .select({ id: medicineConsumptionDetailsSchema.id })
@@ -81,11 +94,16 @@ export class DrizzleMedicineConsumptionRepository implements MedicineConsumption
   async findByMedicineId(
     userId: string,
     medicineId: string,
-  ): Promise<{ details: MedicineConsumptionDetails; times: MedicineConsumptionTime[] } | null> {
+  ): Promise<MedicineConsumptionData | null> {
     const medicine = await this.drizzleService.db
       .select({ id: medicinesSchema.id })
       .from(medicinesSchema)
-      .where(and(eq(medicinesSchema.id, medicineId), eq(medicinesSchema.userId, userId)))
+      .where(
+        and(
+          eq(medicinesSchema.id, medicineId),
+          eq(medicinesSchema.userId, userId),
+        ),
+      )
       .limit(1);
 
     if (medicine.length === 0) return null;
@@ -103,6 +121,8 @@ export class DrizzleMedicineConsumptionRepository implements MedicineConsumption
       .select()
       .from(medicineConsumptionTimesSchema)
       .where(eq(medicineConsumptionTimesSchema.detailsId, detailsRow.id));
+
+    const confirmations = await this.listConfirmations(medicineId);
 
     return {
       details: MedicineConsumptionDetails.restore({
@@ -124,6 +144,7 @@ export class DrizzleMedicineConsumptionRepository implements MedicineConsumption
             updatedAt: row.updatedAt,
           })!,
       ),
+      confirmations,
     };
   }
 
@@ -132,10 +153,16 @@ export class DrizzleMedicineConsumptionRepository implements MedicineConsumption
       const medicine = await tx
         .select({ id: medicinesSchema.id })
         .from(medicinesSchema)
-        .where(and(eq(medicinesSchema.id, medicineId), eq(medicinesSchema.userId, userId)))
+        .where(
+          and(
+            eq(medicinesSchema.id, medicineId),
+            eq(medicinesSchema.userId, userId),
+          ),
+        )
         .limit(1);
 
-      if (medicine.length === 0) throw new NotFoundException("Medicine not found");
+      if (medicine.length === 0)
+        throw new NotFoundException("Medicine not found");
 
       const detailsRows = await tx
         .select({ id: medicineConsumptionDetailsSchema.id })
@@ -154,5 +181,119 @@ export class DrizzleMedicineConsumptionRepository implements MedicineConsumption
         .delete(medicineConsumptionDetailsSchema)
         .where(eq(medicineConsumptionDetailsSchema.id, d.id));
     });
+  }
+
+  async createConfirmation(
+    medicineId: string,
+    confirmation: MedicineConsumptionConfirmation,
+  ): Promise<MedicineConsumptionConfirmation> {
+    const inserted = await this.drizzleService.db
+      .insert(medicineConsumptionConfirmationsSchema)
+      .values({
+        medicineId,
+        tomado: confirmation.tomado,
+        observacao: confirmation.observacao,
+        horario: confirmation.horario,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+
+    return this.mapConfirmation(inserted[0])!;
+  }
+
+  async findConfirmationById(
+    medicineId: string,
+    confirmationId: string,
+  ): Promise<MedicineConsumptionConfirmation | null> {
+    const rows = await this.drizzleService.db
+      .select()
+      .from(medicineConsumptionConfirmationsSchema)
+      .where(
+        and(
+          eq(medicineConsumptionConfirmationsSchema.id, confirmationId),
+          eq(medicineConsumptionConfirmationsSchema.medicineId, medicineId),
+        ),
+      )
+      .limit(1);
+
+    return this.mapConfirmation(rows[0]);
+  }
+
+  async listConfirmations(
+    medicineId: string,
+  ): Promise<MedicineConsumptionConfirmation[]> {
+    const rows = await this.drizzleService.db
+      .select()
+      .from(medicineConsumptionConfirmationsSchema)
+      .where(eq(medicineConsumptionConfirmationsSchema.medicineId, medicineId))
+      .orderBy(
+        desc(medicineConsumptionConfirmationsSchema.horario),
+        desc(medicineConsumptionConfirmationsSchema.createdAt),
+      );
+
+    return rows.map((row) => this.mapConfirmation(row)!);
+  }
+
+  async updateConfirmation(
+    medicineId: string,
+    confirmation: MedicineConsumptionConfirmation,
+  ): Promise<void> {
+    await this.drizzleService.db
+      .update(medicineConsumptionConfirmationsSchema)
+      .set({
+        tomado: confirmation.tomado,
+        observacao: confirmation.observacao,
+        horario: confirmation.horario,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(medicineConsumptionConfirmationsSchema.id, confirmation.id!),
+          eq(medicineConsumptionConfirmationsSchema.medicineId, medicineId),
+        ),
+      );
+  }
+
+  async deleteConfirmation(
+    medicineId: string,
+    confirmationId: string,
+  ): Promise<void> {
+    await this.drizzleService.db
+      .delete(medicineConsumptionConfirmationsSchema)
+      .where(
+        and(
+          eq(medicineConsumptionConfirmationsSchema.id, confirmationId),
+          eq(medicineConsumptionConfirmationsSchema.medicineId, medicineId),
+        ),
+      );
+  }
+
+  private mapConfirmation(
+    row:
+      | {
+          id: string;
+          medicineId: string;
+          tomado: boolean;
+          observacao: string | null;
+          horario: Date;
+          createdAt: Date;
+          updatedAt: Date;
+        }
+      | undefined,
+  ): MedicineConsumptionConfirmation | null {
+    return MedicineConsumptionConfirmation.restore(
+      row
+        ? {
+            id: row.id,
+            medicineId: row.medicineId,
+            tomado: row.tomado,
+            observacao: row.observacao ?? null,
+            horario: row.horario,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+          }
+        : undefined,
+    );
   }
 }

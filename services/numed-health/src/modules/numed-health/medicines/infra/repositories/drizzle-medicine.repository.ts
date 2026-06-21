@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { medicineConsumptionConfirmationsSchema } from "@numed-health/medicine-consumption/infra/database/schemas/medicine-consumption-confirmations.schema";
 import { medicineConsumptionDetailsSchema } from "@numed-health/medicine-consumption/infra/database/schemas/medicine-consumption-details.schema";
 import { medicineConsumptionTimesSchema } from "@numed-health/medicine-consumption/infra/database/schemas/medicine-consumption-times.schema";
 import { DosageUnit } from "@numed-health/medicines/domain/enums/dosage-unit.enum";
@@ -50,6 +51,10 @@ export class DrizzleMedicineRepository implements MedicineRepository {
 
   async delete(userId: string, id: string): Promise<void> {
     await this.drizzleService.db.transaction(async (tx) => {
+      await tx
+        .delete(medicineConsumptionConfirmationsSchema)
+        .where(eq(medicineConsumptionConfirmationsSchema.medicineId, id));
+
       const detailsRows = await tx
         .select({ id: medicineConsumptionDetailsSchema.id })
         .from(medicineConsumptionDetailsSchema)
