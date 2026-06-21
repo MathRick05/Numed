@@ -16,11 +16,11 @@ export class CreateAppointmentDto {
   @MaxLength(200)
   tipoConsulta: string;
 
-  @ApiProperty({ example: "Dra. Ana Souza" })
+  @ApiProperty({ example: "Dra. Ana Souza", required: false })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(200)
-  doutor: string;
+  doutor?: string;
 
   @ApiProperty({ example: "2026-05-03" })
   @IsString()
@@ -34,11 +34,11 @@ export class CreateAppointmentDto {
   @Matches(/^\d{2}:\d{2}$/)
   hora: string;
 
-  @ApiProperty({ example: "Clínica ABC, Rua X, 123" })
+  @ApiProperty({ example: "Clínica ABC, Rua X, 123", required: false })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(400)
-  endereco: string;
+  endereco?: string;
 
   @ApiProperty({ enum: AppointmentStatus, example: AppointmentStatus.EM_ANDAMENTO })
   @IsEnum(AppointmentStatus)

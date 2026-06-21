@@ -19,7 +19,6 @@ export class UpdateAppointmentDto {
 
   @ApiProperty({ example: "Dra. Ana Souza", required: false })
   @IsString()
-  @IsNotEmpty()
   @MaxLength(200)
   @IsOptional()
   doutor?: string;
@@ -40,7 +39,6 @@ export class UpdateAppointmentDto {
 
   @ApiProperty({ example: "Clínica ABC, Rua X, 123", required: false })
   @IsString()
-  @IsNotEmpty()
   @MaxLength(400)
   @IsOptional()
   endereco?: string;

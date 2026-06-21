@@ -29,10 +29,10 @@ export class AppointmentService {
     const appointment = Appointment.restore({
       userId,
       tipoConsulta: dto.tipoConsulta,
-      doutor: dto.doutor,
+      doutor: dto.doutor ?? "",
       data: dto.data,
       hora: dto.hora,
-      endereco: dto.endereco,
+      endereco: dto.endereco ?? "",
       status: dto.status,
       descricao: dto.descricao ?? "",
     })!;
