@@ -11,6 +11,7 @@ import {
 } from "@nestjs/swagger";
 import { Permission } from "@shared/domain/enums/permission.enum";
 import { RequirePermissions } from "@shared/infra/decorators/permissions.decorator";
+import { Public } from "@shared/infra/decorators/public.decorator";
 
 @ApiTags("medicine-consumption")
 @ApiBearerAuth()
@@ -19,7 +20,7 @@ export class MedicineConsumptionController {
   constructor(private readonly medicineConsumptionService: MedicineConsumptionService) {}
 
   @Get()
-  // @RequirePermissions(Permission.MEDICINES_READ)
+  @Public() // @RequirePermissions(Permission.MEDICINES_READ)
   @ApiOperation({ summary: "Buscar configuração de consumo do remédio" })
   async findByMedicineId(
     @Param("userId") userId: string,
@@ -30,7 +31,7 @@ export class MedicineConsumptionController {
 
   @Put()
   @HttpCode(HttpStatus.NO_CONTENT)
-  // @RequirePermissions(Permission.MEDICINES_WRITE)
+  @Public() // @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Criar/atualizar configuração de consumo do remédio" })
   @ApiNoContentResponse({ description: "Configuração de consumo salva" })
   @ApiNotFoundResponse({ description: "Remédio não encontrado" })
@@ -44,7 +45,7 @@ export class MedicineConsumptionController {
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  // @RequirePermissions(Permission.MEDICINES_WRITE)
+  @Public() // @RequirePermissions(Permission.MEDICINES_WRITE)
   @ApiOperation({ summary: "Remover configuração de consumo do remédio" })
   @ApiNoContentResponse({ description: "Configuração de consumo removida" })
   async remove(@Param("userId") userId: string, @Param("medicineId") medicineId: string) {

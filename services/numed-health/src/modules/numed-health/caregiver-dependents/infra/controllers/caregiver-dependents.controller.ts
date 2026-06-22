@@ -19,6 +19,7 @@ import {
 } from "@nestjs/swagger";
 import { Permission } from "@shared/domain/enums/permission.enum";
 import { RequirePermissions } from "@shared/infra/decorators/permissions.decorator";
+import { Public } from "@shared/infra/decorators/public.decorator";
 
 @ApiTags("caregivers")
 @ApiBearerAuth()
@@ -27,14 +28,14 @@ export class CaregiverDependentsController {
   constructor(private readonly caregiverDependentService: CaregiverDependentService) {}
 
   @Get()
-  // @RequirePermissions(Permission.CAREGIVER_DEPENDENTS_READ)
+  @Public() // @RequirePermissions(Permission.CAREGIVER_DEPENDENTS_READ)
   @ApiOperation({ summary: "Listar dependentes do cuidador" })
   async list(@Param("caregiverId") caregiverId: string): Promise<CaregiverDependentResponseDto[]> {
     return this.caregiverDependentService.listDependents(caregiverId);
   }
 
   @Post()
-  // @RequirePermissions(Permission.CAREGIVER_DEPENDENTS_WRITE)
+  @Public() // @RequirePermissions(Permission.CAREGIVER_DEPENDENTS_WRITE)
   @ApiOperation({ summary: "Vincular dependente ao cuidador" })
   async create(
     @Param("caregiverId") caregiverId: string,
@@ -45,7 +46,7 @@ export class CaregiverDependentsController {
 
   @Delete(":dependentId")
   @HttpCode(HttpStatus.NO_CONTENT)
-  // @RequirePermissions(Permission.CAREGIVER_DEPENDENTS_DELETE)
+  @Public() // @RequirePermissions(Permission.CAREGIVER_DEPENDENTS_DELETE)
   @ApiOperation({ summary: "Remover vínculo cuidador-dependente" })
   @ApiNoContentResponse({ description: "Vínculo removido" })
   async remove(
