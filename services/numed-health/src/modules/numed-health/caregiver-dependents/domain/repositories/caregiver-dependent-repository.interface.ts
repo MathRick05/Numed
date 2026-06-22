@@ -7,4 +7,5 @@ export interface CaregiverDependentRepository {
   delete(caregiverId: string, dependentId: string): Promise<void>;
   exists(caregiverId: string, dependentId: string): Promise<boolean>;
   listDependents(caregiverId: string): Promise<CaregiverDependent[]>;
+  listCaregivers(dependentId: string): Promise<CaregiverDependent[]>;
 }

@@ -86,4 +86,20 @@ export class DrizzleCaregiverDependentRepository
         })!,
     );
   }
+
+  async listCaregivers(dependentId: string): Promise<CaregiverDependent[]> {
+    const rows = await this.drizzleService.db
+      .select()
+      .from(caregiverDependentsSchema)
+      .where(eq(caregiverDependentsSchema.dependentId, dependentId));
+
+    return rows.map(
+      (row) =>
+        CaregiverDependent.restore({
+          id: row.id,
+          caregiverId: row.caregiverId,
+          dependentId: row.dependentId,
+        })!,
+    );
+  }
 }

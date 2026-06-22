@@ -29,4 +29,9 @@ export class CaregiverDependentService {
     const links = await this.caregiverDependentRepository.listDependents(caregiverId);
     return links.map(CaregiverDependentResponseDto.from);
   }
+
+  async listCaregivers(dependentId: string): Promise<CaregiverDependentResponseDto[]> {
+    const links = await this.caregiverDependentRepository.listCaregivers(dependentId);
+    return links.map(CaregiverDependentResponseDto.from);
+  }
 }
